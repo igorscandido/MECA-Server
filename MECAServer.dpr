@@ -5,13 +5,29 @@ program MECAServer;
 {$R *.res}
 
 uses
-  System.SysUtils, Horse;
+  System.SysUtils,
+  Horse,
+  Provider.Connection in 'Providers\Provider.Connection.pas' {ProviderConnection: TDataModule};
+
+var
+  DBConnection : TProviderConnection;
+
+  function Init : boolean;
+  begin
+
+    DBConnection := TProviderConnection.Create(nil);
+
+  end;
 
 begin
-  try
-    { TODO -oUser -cConsole Main : Insert code here }
-  except
-    on E: Exception do
-      Writeln(E.ClassName, ': ', E.Message);
-  end;
+
+  Init;
+
+  THorse.Get('/ping',
+  procedure(Req : THorseRequest; Res : THorseResponse; Next: TProc)
+  begin
+    Res.Send('Olá!');
+  end);
+
+  THorse.Listen(9000);
 end.

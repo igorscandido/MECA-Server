@@ -1,0 +1,20 @@
+program MECAServer;
+
+{$APPTYPE CONSOLE}
+
+{$R *.res}
+
+uses
+  System.SysUtils,
+  Horse,
+  Provider.Connection in 'Providers\Provider.Connection.pas' {DataModule1: TDataModule};
+
+begin
+  THorse.Get('/ping',
+  procedure(Req : THorseRequest; Res : THorseResponse; Next: TProc)
+  begin
+    Res.Send('Olá!');
+  end);
+
+  THorse.Listen(9000);
+end.

@@ -1,0 +1,14 @@
+object DBConnection: TDBConnection
+  OldCreateOrder = False
+  OnCreate = DataModuleCreate
+  Height = 150
+  Width = 215
+  object FDManager: TFDManager
+    FormatOptions.AssignedValues = [fvMapRules]
+    FormatOptions.OwnMapRules = True
+    FormatOptions.MapRules = <>
+    Active = True
+    Left = 80
+    Top = 40
+  end
+end
