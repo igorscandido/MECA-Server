@@ -48,7 +48,6 @@ begin
 
 
   WriteLN('Carregando arquivos de configuração...');
-
   if not FileExists(PathConnection) then begin
     WriteLN(Format('Arquivo de configuração do BD não encontrado em: %s',
                     [PathConnection]));

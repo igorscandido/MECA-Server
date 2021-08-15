@@ -7,12 +7,13 @@ program MECAServer;
 uses
   System.SysUtils,
   Horse,
-  Provider.Connection in 'Providers\Provider.Connection.pas' {ProviderConnection: TDataModule};
+  Provider.Connection in 'Providers\Provider.Connection.pas' {ProviderConnection: TDataModule},
+  Provider.Utils in 'Providers\Provider.Utils.pas';
 
 var
   DBConnection : TProviderConnection;
 
-  function Init : boolean;
+  procedure Init;
   begin
 
     DBConnection := TProviderConnection.Create(nil);
