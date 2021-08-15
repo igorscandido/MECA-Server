@@ -12,7 +12,8 @@ uses
   Service.Module in 'Services\Service.Module.pas' {ServiceModule: TDataModule},
   Service.Produto in 'Services\Service.Produto.pas' {ServiceProduto: TDataModule},
   System.JSON,
-  Dataset.Serialize;
+  Dataset.Serialize, // Help works with conversion from Dataset to Json
+  Horse.Jhonson;
 
 var
   DBConnection : TProviderConnection;
@@ -28,16 +29,38 @@ begin
 
   Init;
 
+  THorse.Use(Jhonson); // Imports Jhonson module to use JSON in Response
+
   THorse.Get('/produtos',
   procedure(Req : THorseRequest; Res : THorseResponse; Next: TProc)
   var
     LService : TServiceProduto;
     LJson : TJSONArray;
   begin
-
     LService := TServiceProduto.Create(nil);
+    try
+      LJson := LService.List.ToJSONArray();
+    finally
+      LService.Free;
+    end;
+    Res.Send<TJSONArray>(LJson);
+  end);
 
-
+  THorse.Get('/produtos/:id',
+  procedure(Req : THorseRequest; Res : THorseResponse; Next: TProc)
+  var
+    LService : TServiceProduto;
+    LJson : TJSONArray;
+    IDProduto : Integer;
+  begin
+    LService := TServiceProduto.Create(nil);
+    try
+      IDProduto := Req.Params[':id'].ToInt64;
+      LJson := LService.GetByID(IDProduto).ToJSONArray();
+    finally
+      LService.Free;
+    end;
+    Res.Send<TJSONArray>(LJson);
   end);
 
   THorse.Listen(9000);

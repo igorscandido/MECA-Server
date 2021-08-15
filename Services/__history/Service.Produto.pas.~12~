@@ -30,7 +30,7 @@ function TServiceProduto.GetByID(ID: Integer): TDataset;
 begin
   Result:= qUpdate;
   qUpdate.SQL.Add('WHERE idproduto = :ID');
-  qUpdate.ParamByName('ID').AsInteger := ID;
+  qUpdate.Params['ID'].AsInteger := ID;
   qUpdate.Open;
 end;
 

@@ -9,11 +9,13 @@ uses
   Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client;
 
 type
-  TServiceModule1 = class(TServiceModule)
+  TServiceProduto = class(TServiceModule)
   private
     { Private declarations }
   public
     { Public declarations }
+    function List: TDataset; // Retrieves all items from Produto Table
+    function GetByID(ID : Integer): TDataset; //Does as the name says
   end;
 
 implementation
@@ -21,5 +23,13 @@ implementation
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
 {$R *.dfm}
+
+{ TServiceModule1 }
+
+function TServiceProduto.List: TDataset;
+begin
+  Result:= Query;
+  Query.Open;
+end;
 
 end.

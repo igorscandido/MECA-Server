@@ -46,5 +46,22 @@ begin
     Res.Send<TJSONArray>(LJson);
   end);
 
+  THorse.Get('/produtos/:id',
+  procedure(Req : THorseRequest; Res : THorseResponse; Next: TProc)
+  var
+    LService : TServiceProduto;
+    LJson : TJSONArray;
+    IDProduto : Integer;
+  begin
+    LService := TServiceProduto.Create(nil);
+    try
+      IDProduto := Req.Params['id'].ToInt64;
+      LJson := LService.GetByID(IDProduto).ToJSONArray();
+    finally
+      LService.Free;
+    end;
+    Res.Send<TJSONArray>(LJson);
+  end);
+
   THorse.Listen(9000);
 end.

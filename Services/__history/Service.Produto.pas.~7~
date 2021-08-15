@@ -15,7 +15,6 @@ type
   public
     { Public declarations }
     function List: TDataset; // Retrieves all items from Produto Table
-    function GetByID(ID : Integer): TDataset; //Does as the name says
   end;
 
 implementation
@@ -25,14 +24,6 @@ implementation
 {$R *.dfm}
 
 { TServiceModule1 }
-
-function TServiceProduto.GetByID(ID: Integer): TDataset;
-begin
-  Result:= qUpdate;
-  qUpdate.SQL.Add('WHERE idproduto = :ID');
-  qUpdate.ParamByName('ID').AsInteger := ID;
-  qUpdate.Open;
-end;
 
 function TServiceProduto.List: TDataset;
 begin
