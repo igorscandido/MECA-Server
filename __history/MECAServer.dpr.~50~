@@ -1,0 +1,44 @@
+program MECAServer;
+
+{$APPTYPE CONSOLE}
+
+{$R *.res}
+
+uses
+  System.SysUtils,
+  Horse,
+  Provider.Connection in 'Providers\Provider.Connection.pas' {ProviderConnection: TDataModule},
+  Provider.Utils in 'Providers\Provider.Utils.pas',
+  Service.Module in 'Services\Service.Module.pas' {ServiceModule: TDataModule},
+  Service.Produto in 'Services\Service.Produto.pas' {ServiceProduto: TDataModule},
+  System.JSON,
+  Dataset.Serialize;
+
+var
+  DBConnection : TProviderConnection;
+
+  procedure Init;
+  begin
+
+    DBConnection := TProviderConnection.Create(nil);
+
+  end;
+
+begin
+
+  Init;
+
+  THorse.Get('/produtos',
+  procedure(Req : THorseRequest; Res : THorseResponse; Next: TProc)
+  var
+    LService : TServiceProduto;
+    LJson : TJSONArray;
+  begin
+
+    LService := TServiceProduto.Create(nil);
+
+
+  end);
+
+  THorse.Listen(9000);
+end.

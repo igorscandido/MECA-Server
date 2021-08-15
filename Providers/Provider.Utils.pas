@@ -2,11 +2,11 @@ unit Provider.Utils;
 
 interface
 
+uses Winapi.Windows;
+
 procedure WriteLNColor(Text: String; Color: Word);
 
 implementation
-
-uses Winapi.Windows;
 
 procedure WriteLNColor(Text: String; Color: Word);
 var

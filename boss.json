@@ -6,6 +6,8 @@
 	"mainsrc": "./",
 	"projects": [],
 	"dependencies": {
-		"github.com/hashload/horse": "^2.0.13"
+		"github.com/hashload/horse": "^2.0.13",
+		"github.com/hashload/jhonson": "^1.1.2",
+		"github.com/viniciussanchez/dataset-serialize": "^v2.3.3"
 	}
 }

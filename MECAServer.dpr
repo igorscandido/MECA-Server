@@ -8,7 +8,12 @@ uses
   System.SysUtils,
   Horse,
   Provider.Connection in 'Providers\Provider.Connection.pas' {ProviderConnection: TDataModule},
-  Provider.Utils in 'Providers\Provider.Utils.pas';
+  Provider.Utils in 'Providers\Provider.Utils.pas',
+  Service.Module in 'Services\Service.Module.pas' {ServiceModule: TDataModule},
+  Service.Produto in 'Services\Service.Produto.pas' {ServiceProduto: TDataModule},
+  System.JSON,
+  Dataset.Serialize, // Help works with conversion from Dataset to Json
+  Horse.Jhonson;
 
 var
   DBConnection : TProviderConnection;
@@ -24,10 +29,21 @@ begin
 
   Init;
 
-  THorse.Get('/ping',
+  THorse.Use(Jhonson); // Imports Jhonson module to use JSON in Response
+
+  THorse.Get('/produtos',
   procedure(Req : THorseRequest; Res : THorseResponse; Next: TProc)
+  var
+    LService : TServiceProduto;
+    LJson : TJSONArray;
   begin
-    Res.Send('Olá!');
+    LService := TServiceProduto.Create(nil);
+    try
+      LJson := LService.List.ToJSONArray();
+    finally
+      LService.Free;
+    end;
+    Res.Send<TJSONArray>(LJson);
   end);
 
   THorse.Listen(9000);
