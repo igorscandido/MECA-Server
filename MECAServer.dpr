@@ -33,6 +33,7 @@ begin
   THorse.Use(Jhonson); // Imports Jhonson module to use JSON in Response
   THorse.Use(HandleException); // Imports Exception Handler for Horse
 
+  {LIST}
   THorse.Get('/produtos',
   procedure(Req : THorseRequest; Res : THorseResponse; Next: TProc)
   var
@@ -48,6 +49,7 @@ begin
     Res.Send<TJSONArray>(LJson);
   end);
 
+  {GETBYID}
   THorse.Get('/produtos/:id',
   procedure(Req : THorseRequest; Res : THorseResponse; Next: TProc)
   var
@@ -66,6 +68,27 @@ begin
       LService.Free;
     end;
     Res.Send<TJSONArray>(LJson);
+  end);
+
+  {INSERT}
+  THorse.Post('/produtos',
+  procedure(Req : THorseRequest; Res : THorseResponse; Next: TProc)
+  var
+    LService : TServiceProduto;
+    LBody : TJSONObject;
+  begin
+    LService := TServiceProduto.Create(nil);
+    try
+      LBody := Req.Body<TJSONObject>;
+
+      if LService.Insert(LBody) then
+        Res.Send<TJSONObject>(LService.qUpdate.ToJSONObject).Status(THTTPStatus.Created)
+      else
+        raise EHorseException.Create(THTTPStatus.NotModified,'Não foi criado');
+
+    finally
+      LService.Free;
+    end;
   end);
 
   THorse.Listen(9000);

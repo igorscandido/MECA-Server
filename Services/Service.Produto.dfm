@@ -28,9 +28,65 @@ inherited ServiceProduto: TServiceProduto
         ParamType = ptInput
         Value = Null
       end>
+    object Queryidproduto: TFDAutoIncField
+      FieldName = 'idproduto'
+      Origin = 'idproduto'
+      ProviderFlags = [pfInWhere, pfInKey]
+    end
+    object Querydescricao: TStringField
+      FieldName = 'descricao'
+      Origin = 'descricao'
+      Required = True
+      Size = 60
+    end
+    object Querypreco: TFloatField
+      AutoGenerateValue = arDefault
+      FieldName = 'preco'
+      Origin = 'preco'
+    end
+    object Querydcadastro: TDateTimeField
+      AutoGenerateValue = arDefault
+      FieldName = 'dcadastro'
+      Origin = 'dcadastro'
+    end
+    object Queryfg_status: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'fg_status'
+      Origin = 'fg_status'
+      FixedChar = True
+      Size = 1
+    end
   end
   inherited qUpdate: TFDQuery
     SQL.Strings = (
       'SELECT * FROM produto')
+    object qUpdateidproduto: TFDAutoIncField
+      FieldName = 'idproduto'
+      Origin = 'idproduto'
+      ProviderFlags = [pfInWhere, pfInKey]
+    end
+    object qUpdatedescricao: TStringField
+      FieldName = 'descricao'
+      Origin = 'descricao'
+      Required = True
+      Size = 60
+    end
+    object qUpdatepreco: TFloatField
+      AutoGenerateValue = arDefault
+      FieldName = 'preco'
+      Origin = 'preco'
+    end
+    object qUpdatedcadastro: TDateTimeField
+      AutoGenerateValue = arDefault
+      FieldName = 'dcadastro'
+      Origin = 'dcadastro'
+    end
+    object qUpdatefg_status: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'fg_status'
+      Origin = 'fg_status'
+      FixedChar = True
+      Size = 1
+    end
   end
 end

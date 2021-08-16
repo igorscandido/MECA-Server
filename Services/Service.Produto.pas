@@ -6,19 +6,32 @@ uses
   System.SysUtils, System.Classes, Service.Module, FireDAC.Stan.Intf,
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
-  Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client;
+  Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,System.JSON;
 
 type
   TServiceProduto = class(TServiceModule)
+    qUpdateidproduto: TFDAutoIncField;
+    qUpdatedescricao: TStringField;
+    qUpdatepreco: TFloatField;
+    qUpdatedcadastro: TDateTimeField;
+    qUpdatefg_status: TStringField;
+    Queryidproduto: TFDAutoIncField;
+    Querydescricao: TStringField;
+    Querypreco: TFloatField;
+    Querydcadastro: TDateTimeField;
+    Queryfg_status: TStringField;
   private
     { Private declarations }
   public
     { Public declarations }
     function List: TDataset; // Retrieves all items from Produto Table
     function GetByID(ID : Integer): TDataset; //Does as the name says
+    function Insert(JSON : TJSONObject) : Boolean;
   end;
 
 implementation
+
+uses Dataset.Serialize;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -32,6 +45,17 @@ begin
   qUpdate.SQL.Add('WHERE idproduto = :ID');
   qUpdate.ParamByName('ID').AsInteger := ID;
   qUpdate.Open;
+end;
+
+function TServiceProduto.Insert(JSON: TJSONObject): Boolean;
+begin
+  qUpdate.SQL.Add('WHERE 1<>1');
+  qUpdate.Open;
+  qUpdate.LoadFromJSON(JSON, False);
+  qUpdate.Edit;
+  qUpdate.FieldByName('dcadastro').Value := now;
+  qUpdate.Post;
+  Result := qUpdate.ApplyUpdates(0) = 0;
 end;
 
 function TServiceProduto.List: TDataset;
