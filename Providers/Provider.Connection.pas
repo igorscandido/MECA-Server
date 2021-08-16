@@ -6,7 +6,7 @@ uses
   System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
   FireDAC.Phys, FireDAC.Comp.Client, System.IOUtils, FireDAC.DApt,
-  FireDAC.Phys.MySQLDef, FireDAC.Phys.MySQL,FireDAC.Stan.Async;
+  FireDAC.Phys.MySQLDef, FireDAC.Phys.MySQL,FireDAC.Stan.Async,Provider.Utils;
 
 type
   TProviderConnection = class(TDataModule)
@@ -23,8 +23,6 @@ var
   ProviderConnection: TProviderConnection;
 
 implementation
-
-uses Provider.Utils;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -49,7 +47,7 @@ begin
                                         'Drivers.ini'] );
 
 
-  WriteLN('Carregando arquivos de configuração...');
+  Provider.Utils.WriteLNColor('Carregando arquivos de configuração...',4);
   if not FileExists(PathConnection) then begin
     WriteLN(Format('Arquivo de configuração do BD não encontrado em: %s',
                     [PathConnection]));

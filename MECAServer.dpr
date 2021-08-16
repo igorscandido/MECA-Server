@@ -13,7 +13,8 @@ uses
   Service.Produto in 'Services\Service.Produto.pas' {ServiceProduto: TDataModule},
   System.JSON,
   Dataset.Serialize, // Help works with conversion from Dataset to Json
-  Horse.Jhonson;
+  Horse.Jhonson,
+  Horse.HandleException; // Creates exceptions with status code
 
 var
   DBConnection : TProviderConnection;
@@ -30,6 +31,7 @@ begin
   Init;
 
   THorse.Use(Jhonson); // Imports Jhonson module to use JSON in Response
+  THorse.Use(HandleException); // Imports Exception Handler for Horse
 
   THorse.Get('/produtos',
   procedure(Req : THorseRequest; Res : THorseResponse; Next: TProc)
@@ -56,7 +58,10 @@ begin
     LService := TServiceProduto.Create(nil);
     try
       IDProduto := Req.Params['id'].ToInt64;
-      LJson := LService.GetByID(IDProduto).ToJSONArray();
+      if LService.GetByID(IDProduto).IsEmpty then
+        raise EHorseException.Create(THTTPStatus.NotFound,'O registro não foi encontrado!');
+
+      LJson := LService.qUpdate.ToJSONArray();
     finally
       LService.Free;
     end;
