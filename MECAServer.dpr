@@ -42,7 +42,7 @@ begin
   begin
     LService := TServiceProduto.Create(nil);
     try
-      LJson := LService.List.ToJSONArray();
+      LJson := LService.List(Req.Query).ToJSONArray();
     finally
       LService.Free;
     end;
@@ -85,6 +85,59 @@ begin
         Res.Send<TJSONObject>(LService.qUpdate.ToJSONObject).Status(THTTPStatus.Created)
       else
         raise EHorseException.Create(THTTPStatus.NotModified,'Não foi criado');
+
+    finally
+      LService.Free;
+    end;
+  end);
+
+  {UPDATE}
+  THorse.Put('/produtos/:id',
+  procedure(Req : THorseRequest; Res : THorseResponse; Next: TProc)
+  var
+    LService : TServiceProduto;
+    LBody : TJSONObject;
+    LID : Cardinal;
+  begin
+    LService := TServiceProduto.Create(nil);
+    try
+
+      LID := Req.Params['id'].ToInt64;
+
+      if LService.GetByID(LID).IsEmpty then
+        raise EHorseException.Create(THTTPStatus.NotFound,'Registro não foi encontrado');
+
+      LBody := Req.Body<TJSONObject>;
+
+      if LService.Update(LBody) then
+        Res.Status(THTTPStatus.NoContent)
+      else
+        raise EHorseException.Create(THTTPStatus.NotModified,'Não foi modificado');
+
+    finally
+      LService.Free;
+    end;
+  end);
+
+  {DELETE}
+  THorse.Delete('/produtos/:id',
+  procedure(Req : THorseRequest; Res : THorseResponse; Next: TProc)
+  var
+    LService : TServiceProduto;
+    LID : Cardinal;
+  begin
+    LService := TServiceProduto.Create(nil);
+    try
+
+      LID := Req.Params['id'].ToInt64;
+
+      if LService.GetByID(LID).IsEmpty then
+        raise EHorseException.Create(THTTPStatus.NotFound,'Registro não foi encontrado');
+
+      if LService.Delete then
+        Res.Status(THTTPStatus.NoContent)
+      else
+        raise EHorseException.Create(THTTPStatus.NotModified,'Não foi possível deletar!');
 
     finally
       LService.Free;

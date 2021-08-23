@@ -1,6 +1,8 @@
 inherited ServiceProduto: TServiceProduto
   OldCreateOrder = True
   inherited Query: TFDQuery
+    FetchOptions.AssignedValues = [evRecsMax]
+    FetchOptions.RecsMax = 50
     SQL.Strings = (
       'SELECT * FROM produto'
       
@@ -32,6 +34,7 @@ inherited ServiceProduto: TServiceProduto
       FieldName = 'idproduto'
       Origin = 'idproduto'
       ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
     end
     object Querydescricao: TStringField
       FieldName = 'descricao'
@@ -64,6 +67,7 @@ inherited ServiceProduto: TServiceProduto
       FieldName = 'idproduto'
       Origin = 'idproduto'
       ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
     end
     object qUpdatedescricao: TStringField
       FieldName = 'descricao'
