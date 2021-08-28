@@ -6,7 +6,8 @@ uses
   System.SysUtils, System.Classes, Service.Module, FireDAC.Stan.Intf,
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
-  Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,System.JSON;
+  Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,System.JSON,
+  System.Generics.Collections;
 
 type
   TServiceProduto = class(TServiceModule)
@@ -24,9 +25,11 @@ type
     { Private declarations }
   public
     { Public declarations }
-    function List: TDataset; // Retrieves all items from Produto Table
+    function List(AFilter : TDictionary<String,String>): TDataset; // Retrieves all items from Produto Table
     function GetByID(ID : Integer): TDataset; //Does as the name says
     function Insert(JSON : TJSONObject) : Boolean;
+    function Update(JSON : TJSONObject) : Boolean;
+    function Delete : Boolean;
   end;
 
 implementation
@@ -38,6 +41,12 @@ uses Dataset.Serialize;
 {$R *.dfm}
 
 { TServiceModule1 }
+
+function TServiceProduto.Delete: Boolean;
+begin
+  qUpdate.Delete;
+  Result := qUpdate.ApplyUpdates(0) = 0;
+end;
 
 function TServiceProduto.GetByID(ID: Integer): TDataset;
 begin
@@ -58,10 +67,31 @@ begin
   Result := qUpdate.ApplyUpdates(0) = 0;
 end;
 
-function TServiceProduto.List: TDataset;
+function TServiceProduto.List(AFilter : TDictionary<String,String>): TDataset;
 begin
   Result:= Query;
+
+  if(Assigned(AFilter)) then
+  begin
+
+    if AFilter.ContainsKey('limit') then begin
+      Query.FetchOptions.RecsMax := AFilter.Items['limit'].ToInt64;
+    end;
+
+    if AFilter.ContainsKey('offset') then begin
+      Query.FetchOptions.RecsSkip := AFilter.Items['offset'].ToInt64;
+    end;
+
+  end;
+
   Query.Open;
+end;
+
+function TServiceProduto.Update(JSON: TJSONObject): Boolean;
+begin
+  qUpdate.Open;
+  qUpdate.MergeFromJSONObject(JSON,False);
+  Result := qUpdate.ApplyUpdates(0) = 0;
 end;
 
 end.

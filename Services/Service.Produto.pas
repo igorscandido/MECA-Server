@@ -68,6 +68,8 @@ begin
 end;
 
 function TServiceProduto.List(AFilter : TDictionary<String,String>): TDataset;
+var
+  I: Integer;
 begin
   Result:= Query;
 
@@ -80,6 +82,15 @@ begin
 
     if AFilter.ContainsKey('offset') then begin
       Query.FetchOptions.RecsSkip := AFilter.Items['offset'].ToInt64;
+    end;
+
+    for I := 0 to Query.ParamCount - 1 do begin
+
+      if (AFilter.ContainsKey(Query.Params[I].Name.ToLower)) then begin
+        Query.Params[I].AsString := AFilter.Items[Query.Params[I].Name.ToLower];
+      end;
+
+
     end;
 
   end;
