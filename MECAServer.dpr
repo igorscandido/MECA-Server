@@ -15,7 +15,9 @@ uses
   Dataset.Serialize,
   Horse.Jhonson,
   Horse.HandleException,
-  Controller.Produto in 'Controllers\Controller.Produto.pas';
+  Controller.Produto in 'Controllers\Controller.Produto.pas',
+  Service.Campanha in 'Services\Service.Campanha.pas' {ServiceModule1: TDataModule},
+  Controller.Campanha in 'Controllers\Controller.Campanha.pas';
 
 // Creates exceptions with status code
 
@@ -38,6 +40,9 @@ begin
 
   // Register the controller for Produtos
   TControllerProduto.Registry;
+
+  // Register the Controller for Campanha
+  TControllerCampanha.Registry;
 
   THorse.Listen(9000);
 end.
